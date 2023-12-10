@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+  <title>Blank Page &mdash; Stisla</title>
+
+  <!-- General CSS Files -->
+  <link rel="stylesheet" href="./bootstrap.min.css">
+  <link rel="stylesheet" href="./all.min.css">
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <!-- jQuery UI CSS -->
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <!-- Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <!-- jQuery UI JS -->
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <!-- Template CSS -->
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./components.css">
+</head>
+
+<body>
+  <div id="app">
+    <div class="row">
+      <div class="col-md-12 col-12 col-sm-12">
+        <div class="card">
+          <div class="card-header" style="background-color: purple; color: white;">
+            <label for="vendedor-select">Vendedor:</label>
+            <select class="form-control" id="vendedor-select">
+              <!-- Opciones de vendedores se cargarán dinámicamente aquí -->
+            </select>          </div>
+          <div class="card-header">
+            <div>
+              <h4 class="p-4">Nombre del Producto: </h4>
+            </div>
+            <div>
+              <div class="input-group mb-3">
+                <input type="text" id="producto-busqueda" class="form-control" placeholder="Buscar producto..."
+                  aria-label="Buscar producto" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" id="agregar-btn">Agregar</button>
+              </div>
+              <div id="lista-productos"></div> <!-- Lista dinámica de productos -->
+            </div>
+            <div class="ml-auto">
+              <!-- Utilizar clases de Bootstrap para personalizar el botón -->
+              <a href="./inventario.html" class="btn btn-primary btn-lg btn-pventa">Inventario</a>
+            </div>
+          </div>
+          <div class="card-body p-5">
+            <div class="table-responsive  container-fluid position-relative ">
+              <table class="table table-striped mb-5" id="tabla-ventas">
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Eliminar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Aquí se agregarán dinámicamente las filas de productos -->
+                </tbody>
+              </table>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h1>Total a pagar:</h1>
+                </div>
+                <div class="ml-auto">
+                  <h1 class="font-weight-bold" id="total-pagar">0.00</h1>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h1>Pago con:</h1>
+                </div>
+                <div>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">$</span>
+                    <input type="number" id="pago-con" class="form-control" aria-label="Amount (to the nearest dollar)">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h1>Cambio </h1>
+                </div>
+                <h1 id="cambio">********</h1>
+                <div class="ml-auto">
+                  <button class="btn btn-primary btn-pventa" id="cancelar-btn">Cancelar</button>
+                </div>
+                <div class="ml-auto">
+                  <button class="btn btn-primary btn-pventa" id="pagar-btn">Pagar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ <script>
+    $(document).ready(function () {
+      // Lista de productos cargada desde el servidor
+      let productos = [];
+
+      $.get('https://8eleven.glitch.me/users/listar-usuarios', function (data) {
+          // Limpiar y agregar opciones al select
+          $('#vendedor-select').empty();
+          data.forEach(function (usuario) {
+            $('#vendedor-select').append(`<option value="${usuario.nombre}">${usuario.nombre}</option>`);
+          });
+        });
+
+      // Función para cargar productos desde el servidor
+      function cargarProductos() {
+        $.get('https://8eleven.glitch.me/products/listar-productos', function (data) {
+          productos = data;
+          // Llenar el campo de búsqueda con los nombres de los productos
+          $('#producto-busqueda').autocomplete({
+            source: productos.map(producto => producto.nombre),
+            select: function (event, ui) {
+              // Al seleccionar un producto, agregarlo a la lista
+              agregarProducto(ui.item.value);
+              // Limpiar el campo de búsqueda después de agregar el producto
+              $('#producto-busqueda').val('');
+              return false;
+            }
+          });
+        });
+      }
+
+      // Función para agregar un producto a la lista
+      function agregarProducto(nombreProducto) {
+        // Buscar el producto en la lista completa
+        const producto = productos.find(p => p.nombre === nombreProducto);
+        if (producto) {
+          // Agregar la fila a la tabla
+          $('#tabla-ventas tbody').append(`
+            <tr>
+              <td>${producto.nombre}</td>
+              <td><input type="number" value="1" class="cantidad"></td>
+              <td>${producto.precio_venta}</td>
+              <td><button class="btn btn-danger btn-action eliminar-producto">Eliminar</button></td>
+            </tr>
+          `);
+          // Actualizar el total a pagar
+          actualizarTotal();
+          // Vincular evento de eliminación al botón
+          $('.eliminar-producto:last').click(function () {
+            $(this).closest('tr').remove();
+            actualizarTotal();
+          });
+        }
+      }
+
+      // Función para actualizar el total a pagar
+      function actualizarTotal() {
+  let total = 0;
+  $('#tabla-ventas tbody tr').each(function () {
+    const cantidad = parseInt($(this).find('.cantidad').val());
+    const precioUnitario = parseFloat($(this).find('td:eq(2)').text()); // Precio unitario
+    const totalProducto = cantidad * precioUnitario;
+
+    // Actualizar el precio total en la fila con formato correcto
+    $(this).find('td:eq(2)').text(totalProducto.toFixed(2));
+
+    total += totalProducto;
+  });
+  
+  // Mostrar el total actualizado en la fila correspondiente
+  $('#total-pagar').text(total.toFixed(2));
+}
+
+
+
+
+
+
+      // Función para manejar el pago y cambio
+      $('#pago-con').on('input', function () {
+      // Dynamically calculate and display the change
+      const pagoCon = parseFloat($(this).val());
+      const total = parseFloat($('#total-pagar').text());
+      const cambio = pagoCon - total;
+      if (!isNaN(cambio) && cambio >= 0) {
+        $('#cambio').text(cambio.toFixed(2));
+      } else {
+        $('#cambio').text('********');
+      }
+    });
+
+      // Cargar productos al iniciar la página
+      cargarProductos();
+    });
+
+    function realizarVenta() {
+      const productosVenta = [];
+      // Iterate through each row in the table and collect product data
+      $('#tabla-ventas tbody tr').each(function () {
+        const producto = {
+          nombre: $(this).find('td:eq(0)').text(),
+          cantidad: parseInt($(this).find('.cantidad').val()),
+          precio: parseFloat($(this).find('td:eq(2)').text()),
+        };
+        productosVenta.push(producto);
+      });
+
+      // Prepare data for the sale request
+      const vendedorSeleccionado = $('#vendedor-select').val();
+        const ventaData = {
+          vendedor: vendedorSeleccionado,
+          productos: productosVenta,
+        };
+
+      // Make an AJAX request to trigger the sale
+      $.ajax({
+        type: 'POST',
+        url: 'https://8eleven.glitch.me/ventas/realizar-venta',  // Replace with your Fastify server URL
+        contentType: 'application/json',
+        data: JSON.stringify(ventaData),
+        success: function (response) {
+          console.log(response);
+          // Optionally, you can perform actions after a successful sale
+        },
+        error: function (error) {
+          console.error(error);
+          // Handle the error if needed
+        },
+      });
+    }
+
+    // Event handler for the "Pagar" button
+    $('#pagar-btn').click(function () {
+      // Other existing code...
+      // Call the function to handle the sale process
+      realizarVenta();
+    });
+  </script>
+</body>
+
+</html>
