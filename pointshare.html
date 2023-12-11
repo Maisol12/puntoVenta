@@ -4,11 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-  <title>Blank Page &mdash; Stisla</title>
+  <title>8Eleven</title>
 
   <!-- General CSS Files -->
   <link rel="stylesheet" href="./bootstrap.min.css">
-  <link rel="stylesheet" href="./all.min.css">
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <!-- jQuery UI CSS -->
@@ -17,90 +16,100 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <!-- jQuery UI JS -->
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
   <!-- Template CSS -->
   <link rel="stylesheet" href="./style.css">
-  <link rel="stylesheet" href="./components.css">
 </head>
 
 <body>
   <div id="app">
-    <div class="row">
+    <div>
       <div class="col-md-12 col-12 col-sm-12">
-        <div class="card">
-          <div class="card-header" style="background-color: purple; color: white;">
-            <label for="vendedor-select">Vendedor:</label>
-            <select class="form-control" id="vendedor-select">
-              <!-- Opciones de vendedores se cargarán dinámicamente aquí -->
-            </select>          </div>
-          <div class="card-header">
-            <div>
-              <h4 class="p-4">Nombre del Producto: </h4>
-            </div>
-            <div>
-              <div class="input-group mb-3">
-                <input type="text" id="producto-busqueda" class="form-control" placeholder="Buscar producto..."
-                  aria-label="Buscar producto" aria-describedby="button-addon2">
-                <button class="btn btn-primary" type="button" id="agregar-btn">Agregar</button>
+        <div>
+          <div class="header bg-dark-subtle">
+            <div class="container">
+              <div class="row">
+                <div class="col mt-5">
+                  <label for="vendedor-select">Vendedor:</label>
+                  <select class="form-select form-select-sm w-50" id="vendedor-select">
+                    <!-- Opciones de vendedores se cargarán dinámicamente aquí -->
+                  </select>
+                </div>
+                <div class="col text-end">
+                  <img src="logo.png" alt="logo" style="width: 200px; height: 160px;">
+                </div>
               </div>
-              <div id="lista-productos"></div> <!-- Lista dinámica de productos -->
-            </div>
-            <div class="ml-auto">
-              <!-- Utilizar clases de Bootstrap para personalizar el botón -->
-              <a href="./inventario.html" class="btn btn-primary btn-lg btn-pventa">Inventario</a>
             </div>
           </div>
-          <div class="card-body p-5">
-            <div class="table-responsive  container-fluid position-relative ">
-              <table class="table table-striped mb-5" id="tabla-ventas">
-                <thead>
-                  <tr>
-                    <th>Producto</th>
-                    <th>Cantidad</th>
-                    <th>Precio</th>
-                    <th>Eliminar</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- Aquí se agregarán dinámicamente las filas de productos -->
-                </tbody>
-              </table>
-            </div>
-            <div class="card">
-              <div class="card-header">
-                <div>
-                  <h1>Total a pagar:</h1>
+        </div>
+        <div class="container w-auto mt-4">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-hader">
+                <div class="container-fluid">
+                  <h5 class="p-4">Agregar productos <small><a href="inventario.html">Inventario</a><small></h5>
+
                 </div>
-                <div class="ml-auto">
-                  <h1 class="font-weight-bold" id="total-pagar">0.00</h1>
+              </div>
+              <div class="card-content">
+                <div class="input-group">
+                  <input type="text" id="producto-busqueda" class="form-control " placeholder="Buscar producto..."
+                    aria-label="Buscar producto" aria-describedby="button-addon2">
+                  <button type="button" class="btn btn-sm btn-primary" id="agregar-btn">Agregar</button>
+
                 </div>
               </div>
             </div>
-            <div class="card">
+          </div>
+        </div>
+        <div class="card-header">
+          <div id="lista-productos"></div> <!-- Lista dinámica de productos -->
+        </div>
+        <div class="card-body p-5">
+          <div class="table-responsive">
+            <table class="table table-striped mb-5" id="tabla-ventas">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Precio</th>
+                  <th>Eliminar</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Aquí se agregarán dinámicamente las filas de productos -->
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-body">
               <div class="card-header">
+                <h5 class="card-title">Total a pagar: $</h5>
                 <div>
-                  <h1>Pago con:</h1>
+                  <h5 class="font-weight-bold" id="total-pagar"> 0.00</h5>
                 </div>
-                <div>
-                  <div class="input-group mb-3">
-                    <span class="input-group-text">$</span>
-                    <input type="number" id="pago-con" class="form-control" aria-label="Amount (to the nearest dollar)">
+              </div>
+              <div class="card-content">
+                <div class="row mt-3">
+                  <div class="col">
+                    <div class="input-group mb-3 w-50">
+                      <span class="input-group-text">Cantidad recibida: </span>
+                      <input type="number" id="pago-con" class="form-control">
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="input-group w-50">
+                      <span class="input-group-text">Cambio: </span>
+                      <span class="form-control" id="cambio"></span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="card">
-              <div class="card-header">
-                <div>
-                  <h1>Cambio </h1>
-                </div>
-                <h1 id="cambio">********</h1>
-                <div class="ml-auto">
-                  <button class="btn btn-primary btn-pventa" id="cancelar-btn">Cancelar</button>
-                </div>
-                <div class="ml-auto">
-                  <button class="btn btn-primary btn-pventa" id="pagar-btn">Pagar</button>
-                </div>
+              <div class="card-footer text-end">
+                <button class="btn btn-sm btn-danger btn-pventa m-3" id="cancelar-btn">Cancelar</button>
+                <button class="btn btn-sm btn-primary btn-pventa m-3" id="pagar-btn">Pagar</button>
               </div>
             </div>
           </div>
@@ -109,18 +118,28 @@
     </div>
   </div>
 
- <script>
+
+
+  <script>
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success m-2",
+        cancelButton: "btn btn-danger"
+      },
+      buttonsStyling: false
+    });
+
     $(document).ready(function () {
       // Lista de productos cargada desde el servidor
       let productos = [];
 
       $.get('https://8eleven.glitch.me/users/listar-usuarios', function (data) {
-          // Limpiar y agregar opciones al select
-          $('#vendedor-select').empty();
-          data.forEach(function (usuario) {
-            $('#vendedor-select').append(`<option value="${usuario.nombre}">${usuario.nombre}</option>`);
-          });
+        // Limpiar y agregar opciones al select
+        $('#vendedor-select').empty();
+        data.forEach(function (usuario) {
+          $('#vendedor-select').append(`<option value="${usuario.nombre}">${usuario.nombre}</option>`);
         });
+      });
 
       // Función para cargar productos desde el servidor
       function cargarProductos() {
@@ -147,13 +166,13 @@
         if (producto) {
           // Agregar la fila a la tabla
           $('#tabla-ventas tbody').append(`
-            <tr>
-              <td>${producto.nombre}</td>
-              <td><input type="number" value="1" class="cantidad"></td>
-              <td>${producto.precio_venta}</td>
-              <td><button class="btn btn-danger btn-action eliminar-producto">Eliminar</button></td>
-            </tr>
-          `);
+                <tr>
+                    <td>${producto.nombre}</td>
+                    <td><input type="number" value="1" class="cantidad"></td>
+                    <td>${producto.precio_venta}</td>
+                    <td><button class="btn btn-danger btn-action eliminar-producto">Eliminar</button></td>
+                </tr>
+            `);
           // Actualizar el total a pagar
           actualizarTotal();
           // Vincular evento de eliminación al botón
@@ -166,39 +185,34 @@
 
       // Función para actualizar el total a pagar
       function actualizarTotal() {
-  let total = 0;
-  $('#tabla-ventas tbody tr').each(function () {
-    const cantidad = parseInt($(this).find('.cantidad').val());
-    const precioUnitario = parseFloat($(this).find('td:eq(2)').text()); // Precio unitario
-    const totalProducto = cantidad * precioUnitario;
+        let total = 0;
+        $('#tabla-ventas tbody tr').each(function () {
+          const cantidad = parseInt($(this).find('.cantidad').val());
+          const precioUnitario = parseFloat($(this).find('td:eq(2)').text()); // Precio unitario
+          const totalProducto = cantidad * precioUnitario;
 
-    // Actualizar el precio total en la fila con formato correcto
-    $(this).find('td:eq(2)').text(totalProducto.toFixed(2));
+          // Actualizar el precio total en la fila con formato correcto
+          $(this).find('td:eq(2)').text(totalProducto.toFixed(2));
 
-    total += totalProducto;
-  });
-  
-  // Mostrar el total actualizado en la fila correspondiente
-  $('#total-pagar').text(total.toFixed(2));
-}
+          total += totalProducto;
+        });
 
-
-
-
-
+        // Mostrar el total actualizado en la fila correspondiente
+        $('#total-pagar').text(total.toFixed(2));
+      }
 
       // Función para manejar el pago y cambio
       $('#pago-con').on('input', function () {
-      // Dynamically calculate and display the change
-      const pagoCon = parseFloat($(this).val());
-      const total = parseFloat($('#total-pagar').text());
-      const cambio = pagoCon - total;
-      if (!isNaN(cambio) && cambio >= 0) {
-        $('#cambio').text(cambio.toFixed(2));
-      } else {
-        $('#cambio').text('********');
-      }
-    });
+        // Dynamically calculate and display the change
+        const pagoCon = parseFloat($(this).val());
+        const total = parseFloat($('#total-pagar').text());
+        const cambio = pagoCon - total;
+        if (!isNaN(cambio) && cambio >= 0) {
+          $('#cambio').text("$ " + cambio.toFixed(2));
+        } else {
+          $('#cambio').text('********');
+        }
+      });
 
       // Cargar productos al iniciar la página
       cargarProductos();
@@ -218,10 +232,20 @@
 
       // Prepare data for the sale request
       const vendedorSeleccionado = $('#vendedor-select').val();
-        const ventaData = {
-          vendedor: vendedorSeleccionado,
-          productos: productosVenta,
-        };
+      const ventaData = {
+        vendedor: vendedorSeleccionado,
+        productos: productosVenta,
+      };
+
+      function limpiarDatosVenta() {
+        // Clear the table
+        $('#tabla-ventas tbody').empty();
+        // Clear the total
+        $('#total-pagar').text('0.00');
+        // Clear the payment and change
+        $('#pago-con').val('');
+        $('#cambio').text('********');
+      }
 
       // Make an AJAX request to trigger the sale
       $.ajax({
@@ -231,21 +255,33 @@
         data: JSON.stringify(ventaData),
         success: function (response) {
           console.log(response);
-          // Optionally, you can perform actions after a successful sale
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: 'Venta realizada con éxito',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          limpiarDatosVenta();
         },
         error: function (error) {
           console.error(error);
-          // Handle the error if needed
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al realizar la venta'
+          });
         },
       });
     }
 
     // Event handler for the "Pagar" button
     $('#pagar-btn').click(function () {
-      // Other existing code...
       // Call the function to handle the sale process
       realizarVenta();
     });
+
   </script>
 </body>
 
